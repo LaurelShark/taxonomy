@@ -1,5 +1,7 @@
+import matplotlib.pyplot as plt
 import sys
 import random
+import math
 
 
 def get_edges(mtx):
@@ -71,14 +73,84 @@ mset = int(input("Enter the number of elements for clusterization: "))
 num1 = int(input("Please, enter first value: "))
 print("Good.")
 num2 = int(input("Enter second value: "))
-auto = input("Enable auto-filling? (y/n)")
+choice = \
+    input("Choose way to make metric space: 1 - manual filling metric table, 2 - auto fill, 3 - drop points on 2D plot")
 
 matrix = [[],
           []]
 matrix[0].append(num1)
 matrix[1].append(num2)
 
-if auto == "y":
+fig, ax = plt.subplots()
+ax.plot(100, 1, 100)
+
+matrix_plot = []
+tmp = [[], []]
+
+
+def key_pressed(event):
+    if event.key == 'enter':
+        build_matrix(tmp, matrix_plot)
+    else:
+        print('Pressed not enter')
+
+
+def fill_cell(row, column, arr, matr):
+    # row = 1
+    # column = 0
+    matr[row][column] = math.sqrt(
+        (arr[0][column] - arr[0][row + 1]) ** 2 + (arr[1][column] - arr[1][row + 1]) ** 2
+    )
+    return matr[row][column]
+
+
+def build_matrix(coord_array, mtx):
+    mtx_depth = len(coord_array[0]) - 1
+    for i in range(0, mtx_depth):
+        mtx.append([0])
+        for j in range(0, i):
+            mtx[i].append(0)
+    # print(mtx[1][0])
+    row_length = 1
+    for item in range(0, mtx_depth):
+        for i in range(0, row_length):
+            mtx[item][i] = fill_cell(item, i, coord_array, mtx)
+        row_length += 1
+    print(mtx)
+    return mtx
+
+
+# restrict number of elements to add
+def pick_up_point(event):
+    if len(tmp) == 0:
+        for i in range(0, 2):
+            tmp.append([])
+    x_point = event.xdata
+    y_point = event.ydata
+    print('picked: x = ' + str(x_point) + ', y = ' + str(y_point))
+    tmp[0].append(x_point)
+    tmp[1].append(y_point)
+    print(tmp)
+
+
+def onclick(event):
+    print('%s click: button=%d, x=%d, y=%d, xdata=%f, ydata=%f' %
+          ('double' if event.dblclick else 'single', event.button,
+           event.x, event.y, event.xdata, event.ydata))
+
+
+# cid = fig.canvas.mpl_connect('button_press_event', onclick)
+
+def make_plot():
+    cid = fig.canvas.mpl_connect('button_press_event', pick_up_point)
+    right_mouse = fig.canvas.mpl_connect('key_press_event', key_pressed)
+
+    plt.show()
+
+
+if choice == "1":
+    manual()
+elif choice == "2":
     auto_fill()
 else:
-    manual()
+    make_plot()
