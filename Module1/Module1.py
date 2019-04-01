@@ -130,7 +130,9 @@ def pick_up_point(event):
     print('picked: x = ' + str(x_point) + ', y = ' + str(y_point))
     tmp[0].append(x_point)
     tmp[1].append(y_point)
+    plt.plot(tmp[0], tmp[1], 'ro')
     print(tmp)
+    plt.show()
 
 
 def onclick(event):
