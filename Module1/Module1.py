@@ -1,7 +1,9 @@
+from scipy.cluster.hierarchy import dendrogram, linkage
 import matplotlib.pyplot as plt
 import sys
 import random
 import math
+import numpy as np
 
 
 def get_edges(mtx):
@@ -90,7 +92,27 @@ tmp = [[], []]
 
 def key_pressed(event):
     if event.key == 'enter':
-        build_matrix(tmp, matrix_plot)
+        dist_matrix = build_matrix(tmp, matrix_plot)
+        single_list = []
+        for i in range(0, len(dist_matrix)):
+            for j in range(0, len(dist_matrix[i])):
+                single_list.append(
+                    dist_matrix[i][j]
+                )
+        matrix_np = np.array(single_list)
+        Z = linkage(matrix_np, 'single')
+        plt.figure(figsize=(25, 10))
+        plt.title('Hierachical Clustering Dendrogram')
+        plt.xlabel('sample matrix')
+        plt.ylabel('distance')
+        dendrogram(Z,
+                   truncate_mode='lastp',
+                   p=12,
+                   show_leaf_counts=True,
+                   leaf_rotation=90.,
+                   leaf_font_size=8,
+                   show_contracted=True, )
+        plt.show()
     else:
         print('Pressed not enter')
 
