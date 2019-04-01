@@ -50,6 +50,26 @@ def auto_fill():
                 random_number = random.randint(low_edge, high_edge)
                 matrix[item].append(random_number)
         print(matrix)
+    single_list = []
+    for i in range(0, len(matrix)):
+        for j in range(0, len(matrix[i])):
+            single_list.append(
+                matrix[i][j]
+            )
+    matrix_np = np.array(single_list)
+    Z = linkage(matrix_np, 'single')
+    plt.figure(figsize=(25, 10))
+    plt.title('Hierachical Clustering Dendrogram')
+    plt.xlabel('sample matrix')
+    plt.ylabel('distance')
+    dendrogram(Z,
+               truncate_mode='lastp',
+               p=12,
+               show_leaf_counts=True,
+               leaf_rotation=90.,
+               leaf_font_size=8,
+               show_contracted=True, )
+    plt.show()
 
 
 def manual():
@@ -68,6 +88,26 @@ def manual():
                 user_number = user_input(low_edge, high_edge)
                 matrix[item].append(user_number)
         print(matrix)
+    single_list = []
+    for i in range(0, len(matrix)):
+        for j in range(0, len(matrix[i])):
+            single_list.append(
+                matrix[i][j]
+            )
+    matrix_np = np.array(single_list)
+    Z = linkage(matrix_np, 'single')
+    plt.figure(figsize=(25, 10))
+    plt.title('Hierachical Clustering Dendrogram')
+    plt.xlabel('sample matrix')
+    plt.ylabel('distance')
+    dendrogram(Z,
+               truncate_mode='lastp',
+               p=12,
+               show_leaf_counts=True,
+               leaf_rotation=90.,
+               leaf_font_size=8,
+               show_contracted=True, )
+    plt.show()
 
 
 print("Welcome to matrix program!")
