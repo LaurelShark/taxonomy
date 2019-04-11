@@ -4,7 +4,7 @@ import requests
 import json
 
 try:
-    data = requests.get("https://public-api.nazk.gov.ua/v1/declaration/8ced3078-d83b-47a9-a595-edc9aa4d8f74").json()
+    data = requests.get("https://public-api.nazk.gov.ua/v1/declaration/539d7fe3-7cfa-4d88-8a97-070b0841f56e").json()
 # poroshenko - 539d7fe3-7cfa-4d88-8a97-070b0841f56e
 # bezsmertnyi - 8ced3078-d83b-47a9-a595-edc9aa4d8f74
 #   with io.open("bezsmertnyi_data.json", "w", encoding="utf8") as json_file:
@@ -40,29 +40,39 @@ def is_married():
 #
 def realty_worth(j=0):
     step_3 = data["data"]["step_3"]
-    costAssessment = list(find_keys(step_3, 'costAssessment'))
-    costDate = list(find_keys(step_3, 'costDate'))
+    cost_assessment = list(find_keys(step_3, "costAssessment"))
+    cost_date = list(find_keys(step_3, 'costDate'))
     available_checks_list = []
-    print(costAssessment)
-    print(costDate)
+    for i in range(0, len(cost_assessment)):
 
-    for i in range(0, len(costAssessment)):
+        if cost_assessment[i] != '':
+            available_checks_list.append(int(cost_assessment[i]))
 
-        if costAssessment[i] != '':
-            available_checks_list.append(int(costAssessment[i]))
-
-        if costDate[j] != '' and costAssessment[i] == '':
-            available_checks_list.append(int(costDate[j]))
+        if cost_date[j] != '' and cost_assessment[i] == '':
+            available_checks_list.append(int(cost_date[j]))
 
         j += 1
-    sum_of_list = reduce((lambda x, y: x + y), available_checks_list)
-    return sum_of_list
+    sum_of_availables = reduce((lambda x, y: x + y), available_checks_list)
+    return sum_of_availables
+
+
+def movables_worth():
+    step_5 = data["data"]["step_5"]
+    declared_elements = list(find_keys(step_5, "costDateUse"))
+    available_movable_prices = []
+    for i in declared_elements:
+        if i != '':
+            available_movable_prices.append(int(i))
+    sum_of_availables = reduce((lambda x, y: x + y), available_movable_prices)
+    return sum_of_availables
 
 
 last_name = data["data"]["step_1"]["lastname"]
 is_married = is_married()
 # TODO ln()
 realty_worth = realty_worth()
+movables_worth = movables_worth()
 print(last_name)
 print(is_married)
 print(realty_worth)
+print(movables_worth)
