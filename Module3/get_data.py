@@ -63,7 +63,52 @@ def movables_worth():
     for i in declared_elements:
         if i != '':
             available_movable_prices.append(int(i))
-    sum_of_availables = reduce((lambda x, y: x + y), available_movable_prices)
+    if len(available_movable_prices) != 0:
+        sum_of_availables = reduce((lambda x, y: x + y), available_movable_prices)
+    else:
+        return 0
+    return sum_of_availables
+
+
+def vehicles_worth():
+    step_6 = data["data"]["step_6"]
+    declared_vehicles = list(find_keys(step_6, "costDate"))
+    available_venicle_prices = []
+    for i in declared_vehicles:
+        if i != '':
+            available_venicle_prices.append(int(i))
+    if len(available_venicle_prices) != 0:
+        sum_of_availables = reduce((lambda x, y: x + y), available_venicle_prices)
+    else:
+        return 0
+    return sum_of_availables
+
+
+def securities_worth():
+    step_7 = data["data"]["step_7"]
+    declared_papers = list(find_keys(step_7, "cost"))
+    available_securities_prices = []
+    for price in declared_papers:
+        if price != '':
+            available_securities_prices.append(int(price))
+    if len(available_securities_prices) != 0:
+        sum_of_availables = reduce((lambda x, y: x + y), available_securities_prices)
+    else:
+        return 0
+    return sum_of_availables
+
+
+def corporation_rights():
+    step_8 = data["data"]["step_8"]
+    declared_rights = list(find_keys(step_8, "cost"))
+    available_rights_prices = []
+    for price in declared_rights:
+        if price != '':
+            available_rights_prices.append(int(price))
+    if len(available_rights_prices) != 0:
+        sum_of_availables = reduce((lambda x, y: x + y), available_rights_prices)
+    else:
+        return 0
     return sum_of_availables
 
 
@@ -72,7 +117,13 @@ is_married = is_married()
 # TODO ln()
 realty_worth = realty_worth()
 movables_worth = movables_worth()
+vehicles_worth = vehicles_worth()
+securities_worth = securities_worth()
+corporation_rights = corporation_rights()
 print(last_name)
 print(is_married)
 print(realty_worth)
 print(movables_worth)
+print(vehicles_worth)
+print(securities_worth)
+print(corporation_rights)
