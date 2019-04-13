@@ -3,18 +3,21 @@ import pandas as pd
 from scipy.cluster.hierarchy import dendrogram, linkage
 import matplotlib.pyplot as plt
 
-
-df = pd.read_csv("heart.csv")
-df = df.iloc[:, 0:14]
-
+df = pd.read_csv("candidates_data.csv")
+labels = np.array(df['last_name'])
+df = df.iloc[:, 1:15]
 df.head()
-Z = linkage(df, 'single')
+
+Z = linkage(df, 'ward')
 plt.figure(figsize=(50, 10))
-plt.title('Heart disease clustering diagram')
-plt.xlabel('heart disease dataset')
+plt.title('Hierarchical Clustering Dendrogram')
+plt.xlabel('Election candidates, Ukraine 2019')
 plt.ylabel('distance')
-dendrogram(Z,
-           leaf_rotation=90.,
-           leaf_font_size=8,
-           )
+dendrogram(
+    Z,
+    labels=labels,
+    leaf_rotation=90.,
+    leaf_font_size=10,
+)
+plt.gcf().subplots_adjust(bottom=0.20)
 plt.show()

@@ -2,9 +2,12 @@ from functools import reduce
 import requests
 import math
 import csv
+import time
 
 USD_COURSE = 26.9579
 EUR_COURSE = 30.5092
+
+candidates_vector_matrix = []
 
 candidates = {
     "poroshenko": "539d7fe3-7cfa-4d88-8a97-070b0841f56e",
@@ -47,13 +50,16 @@ candidates = {
     "lytvynenko": "dbd8bfcb-a9d1-43e2-945a-83acb36cfcf9",
     "gaber": "175b580f-288d-4314-b492-59bcd3720c34",
     "skotsyk": "ed6cd752-6210-41cf-9843-f7d496aa6c9b",
-    "rygovanov": "70a23b43-36d7-457c-8f56-acb62287f56c",
+
+    # "rygovanov": "70a23b43-36d7-457c-8f56-acb62287f56c",
+
     "jyravliov": "ca4f9ccf-047d-46d6-952e-1927ea8b902e",
     "vaschenko": "7ee118e7-e23b-44ca-9702-172fc6a741f5",
     "nosenko": "dc9c1595-5cc7-4156-8d1e-b80b4d00aee4"
 }
 
 for candidate in candidates:
+
     try:
         data = requests.get("https://public-api.nazk.gov.ua/v1/declaration/" + candidates.get(candidate, "")).json()
     # poroshenko - 539d7fe3-7cfa-4d88-8a97-070b0841f56e
@@ -144,12 +150,15 @@ for candidate in candidates:
         step_7 = data["data"]["step_7"]
         declared_papers = list(find_keys(step_7, "cost"))
         available_securities_prices = []
+
         for price in declared_papers:
-            if price != '':
-                available_securities_prices.append(int(price))
+            splitted_price, separator, tail = price.partition(',')
+            if splitted_price != '':
+                available_securities_prices.append(int(float(splitted_price)))
+
         if len(available_securities_prices) != 0:
             sum_of_availables = reduce((lambda x, y: x + y), available_securities_prices)
-        else:
+        if len(available_securities_prices) == 0 or sum_of_availables < 1:
             return 1.01
         return sum_of_availables
 
@@ -158,9 +167,12 @@ for candidate in candidates:
         step_8 = data["data"]["step_8"]
         declared_rights = list(find_keys(step_8, "cost"))
         available_rights_prices = []
+
         for price in declared_rights:
+            splitted_price, separator, tail = price.partition(',')
             if price != '':
-                available_rights_prices.append(int(price))
+                available_rights_prices.append(int(float(splitted_price)))
+
         if len(available_rights_prices) != 0:
             sum_of_availables = reduce((lambda x, y: x + y), available_rights_prices)
         else:
@@ -173,8 +185,9 @@ for candidate in candidates:
         declared_revenue = list(find_keys(step_11, "sizeIncome"))
         available_revenue_volume = []
         for revenue in declared_revenue:
+            splitted_revenue, separator, tail = revenue.partition(',')
             if revenue != '':
-                available_revenue_volume.append(int(revenue))
+                available_revenue_volume.append(int(float(splitted_revenue)))
         if len(available_revenue_volume) != 0:
             sum_of_availabilities = reduce((lambda x, y: x + y), available_revenue_volume)
         else:
@@ -205,7 +218,7 @@ for candidate in candidates:
         pass
 
 
-    last_name = data["data"]["step_1"]["lastname"]
+    last_name = candidate
     is_married = is_married()
     realty_worth = math.log(realty_worth())
     movables_worth = math.log(movables_worth())
@@ -225,17 +238,12 @@ for candidate in candidates:
               corporation_rights,
               revenue_volume,
               cash_assets]
-    print(last_name)
-    print(is_married)
-    print(realty_worth)
-    print(movables_worth)
-    print(vehicles_worth)
-    print(securities_worth)
-    print(corporation_rights)
-    print(revenue_volume)
-    print(cash_assets)
+    print(person)
+    candidates_vector_matrix.append(person)
+    time.sleep(5)
 
-    with open("data.csv", "a", encoding="utf-8") as csv_file:
+for candidate in candidates_vector_matrix:
+    with open("candidates_data_fill_gaps.csv", "a", encoding="utf-8") as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow(person)
-    csv_file.close()
+        writer.writerow(candidate)
+csv_file.close()
