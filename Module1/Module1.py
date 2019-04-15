@@ -57,18 +57,16 @@ def auto_fill():
                 matrix[i][j]
             )
     matrix_np = np.array(single_list)
-    Z = linkage(matrix_np, 'single')
+    Z = linkage(matrix_np, 'ward')
     plt.figure(figsize=(25, 10))
     plt.title('Hierachical Clustering Dendrogram')
     plt.xlabel('sample matrix')
     plt.ylabel('distance')
-    dendrogram(Z,
-               truncate_mode='lastp',
-               p=12,
-               show_leaf_counts=True,
-               leaf_rotation=90.,
-               leaf_font_size=8,
-               show_contracted=True, )
+    dendrogram(
+                Z,
+                leaf_rotation=90.,
+                leaf_font_size=10,
+    )
     plt.show()
 
 
@@ -95,18 +93,16 @@ def manual():
                 matrix[i][j]
             )
     matrix_np = np.array(single_list)
-    Z = linkage(matrix_np, 'single')
+    Z = linkage(matrix_np, 'ward')
     plt.figure(figsize=(25, 10))
     plt.title('Hierachical Clustering Dendrogram')
     plt.xlabel('sample matrix')
     plt.ylabel('distance')
-    dendrogram(Z,
-               truncate_mode='lastp',
-               p=12,
-               show_leaf_counts=True,
-               leaf_rotation=90.,
-               leaf_font_size=8,
-               show_contracted=True, )
+    dendrogram(
+                Z,
+                leaf_rotation=90.,
+                leaf_font_size=10,
+    )
     plt.show()
 
 
